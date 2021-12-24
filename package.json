@@ -1,0 +1,17 @@
+{
+  "name": "deep-js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/codehzy/deep-js.git",
+  "author": "hzy <1257664828@qq.com>",
+  "license": "MIT",
+  "scripts": {
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  },
+  "devDependencies": {
+    "prettier": "^2.5.1",
+    "vuepress": "^1.8.3",
+    "vuepress-theme-reco": "^1.6.10"
+  }
+}
