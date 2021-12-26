@@ -30,7 +30,7 @@ module.exports = {
       {
         title: 'JavaScript运行环境',
         path: '/handbook/01_browser-deep',
-        collapsable: false, //折叠
+        // collapsable: false, //折叠
         children: [
           { title: '浏览器工作原理', path: '/handbook/01_browser-deep' },
           { title: 'V8引擎工作原理', path: '/handbook/02_v8-work' },
@@ -39,7 +39,20 @@ module.exports = {
         ]
       }
     ],
-    // 开始多级标题展示
-    subSideBar: 'auto'
-  }
+    subSidebar: 'auto', //在所有页面中启用自动生成子侧边栏，原 sidebar 仍然兼容,
+    codeTheme: 'tomorrow'
+  },
+  plugins: [
+    '@vuepress-reco/extract-code',
+    {
+      '@vuepress/medium-zoom': {
+        selector: 'img.zoom-custom-imgs',
+        // medium-zoom options here
+        // See: https://github.com/francoischalifour/medium-zoom#options
+        options: {
+          margin: 16
+        }
+      }
+    }
+  ]
 }

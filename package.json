@@ -10,8 +10,12 @@
     "docs:build": "vuepress build docs"
   },
   "devDependencies": {
+    "@vuepress/plugin-medium-zoom": "^1.9.5",
     "prettier": "^2.5.1",
     "vuepress": "^1.8.3",
     "vuepress-theme-reco": "^1.6.10"
+  },
+  "dependencies": {
+    "@vuepress-reco/vuepress-plugin-extract-code": "^1.0.4"
   }
 }
