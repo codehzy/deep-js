@@ -30,7 +30,7 @@ module.exports = {
       {
         title: 'JavaScript运行环境',
         path: '/handbook/01_browser-deep',
-        // collapsable: false, //折叠
+        collapsable: false, //折叠
         children: [
           { title: '浏览器工作原理', path: '/handbook/01_browser-deep' },
           { title: 'V8引擎工作原理', path: '/handbook/02_v8-work' },
@@ -41,7 +41,7 @@ module.exports = {
       {
         title: 'JavaScript作用域和函数',
         path: '/handbook/05_know-scope',
-        // collapsable: false, //折叠
+        collapsable: false, //折叠
         children: [
           { title: '认识作用域', path: '/handbook/05_know-scope' },
           { title: '执行上下文', path: '/handbook/06_exec-context' },

@@ -215,3 +215,189 @@ b = 100
 - 函数执行，函数内部会将定义变量那一行转换成两行代码
 - `var a = 10; b = 10;`
 - 因此 `a` 是在函数内的变量，我们访问不到，但是 `b` 前面**没有声明函数，会被提升到全局**，故可以访问到 `b`
+
+### 4、JavaScript 中函数是一等公民
+
+#### 函数是一等公民定义
+
+- 函数可以作为另外一个函数的参数，也可以作为另外一个函数的返回值来使用。
+
+1. **函数作为另一个函数的参数**
+
+```js
+function calc(num1, num2, calcFn) {
+  console.log(calcFn(num1, num2))
+}
+
+function add(num1, num2) {
+  return num1 + num2
+}
+
+function sub(num1, num2) {
+  return num1 - num2
+}
+
+function mul(num1, num2) {
+  return num1 * num2
+}
+
+var m = 20
+var n = 30
+
+calc(m, n, mul)
+```
+
+- 上方代码，`calc` 函数接受一个 `calcFn（是函数）` 参数作为一个函数
+- 我们可以传入不同的 `calcFn` 函数定义，这样就可以有更好的扩展性
+
+2. 函数会返回去另外一个函数作为返回值的函数
+
+```js
+function makeAdder(count) {
+  function add(num) {
+    return count + num
+  }
+
+  return add
+}
+
+var add5 = makeAdder(5)
+console.log(add5(6)) // 11
+console.log(add5(10)) // 15
+
+var add10 = makeAdder(10)
+console.log(add5(6)) // 16
+```
+
+:::tip
+**高阶函数**
+
+我们通常把一个函数如果接受另外一个函数作为参数，或者该函数会返回另外一个函数作为返回值的函数，称这个函数为高阶函数。
+:::
+
+### 5、数组中的函数使用
+
+1. **函数和方法的区别**
+
+   - 函数 `function`:独立的 `function`，称之为一个函数
+   - 方法 `method`: 当我们的一个函数属于某一个对象时, 我们成这个函数是这个对象的方法
+
+2. **filter：过滤**
+
+```js
+var nums = [10, 5, 11, 100, 55]
+var newNums = nums.filter(function (item) {
+  return item % 2 === 0 // 偶数
+})
+console.log(newNums)
+```
+
+3. **map: 映射**
+
+```js
+var nums = [10, 5, 11, 100, 55]
+var newNums2 = nums.map(function (item) {
+  return item * 10
+})
+console.log(newNums2) // [20,10,22,200,110]
+```
+
+4. **forEach: 迭代**
+
+```js
+var nums = [10, 5, 11, 100, 55]
+nums.forEach(function (item) {
+  console.log(item)
+})
+
+// 10,5,11,100,55
+```
+
+5. **find/findIndex**
+
+```js
+var nums = [10, 5, 11, 100, 55]
+var item = nums.find(function (item) {
+  return item === 11
+}) // 11
+
+var friends = [
+  { name: 'hzy', age: 18 },
+  { name: 'kobe', age: 40 },
+  { name: 'james', age: 35 },
+  { name: 'curry', age: 30 }
+]
+
+var findFriend = friends.find(function (item) {
+  return item.name === 'kobe'
+})
+console.log(findFriend) // {name: 'kobe', age: 40}
+
+var friendIndex = friends.findIndex(function (item) {
+  return item.name === 'james'
+})
+// console.log(friendIndex) // 1
+```
+
+6. **reduce: 累加**
+
+```js
+var nums = [10, 5, 11, 100, 55]
+
+var total = 0
+for (var i = 0; i < nums.length; i++) {
+  total += nums[i]
+}
+console.log(total) // 181
+
+var total = nums.reduce(function (preValue, item) {
+  return preValue + item
+}, 0)
+console.log(total) // 181
+```
+
+### 6、闭包
+
+1. **闭包定义**
+
+**维基百科**
+
+- 闭包（英语：Closure），又称词法闭包（Lexical Closure）或函数闭包（function closures）；
+- 是在支持头等函数的编程语言中，实现词法绑定的一种技术；
+- 闭包在实现上是一个结构体，它存储了一个函数和一个关联的环境（相当于一个符号查找表）；
+- 闭包跟函数最大的区别在于，当捕捉闭包的时候，它的自由变量会在补充时被确定，这样即使脱离了捕捉时的上下文，它也能照常运行；
+
+**MDN**
+
+- 一个函数和对其周围状态（lexical environment，词法环境）的引用捆绑在一起（或者说函数被引用包围），这样的组合就是闭包（closure）；
+- 闭包让你可以在一个内层函数中访问到其外层函数的作用域
+- 在 JavaScript 中，每当创建一个函数，闭包就会在函数创建的同时被创建出来
+
+**个人总结**
+
+- **闭包 = 函数本身 + 能访问的外层的自由变量**
+
+- 一个普通的函数 `function`，如果它可以访问外层作用于的自由变量，那么这个函数就是一个闭包;
+- **从广义的角度来说**:`JavaScript` 中的函数都是闭包;
+- **从狭义的角度来说**:`JavaScript` 中一个函数，如果访问了外层作用于的变量，那么它是一个闭包;
+
+![闭包的形成](../.vuepress/public/closure.png)
+
+```js
+function foo() {
+  // AO: 销毁
+  var name = 'foo'
+  function bar() {
+    console.log('bar', name)
+  }
+
+  return bar
+}
+
+var fn = foo()
+fn()
+```
+
+- 结合上述代码和图片，在执行 `var fn = foo()`这一行时候，当 `foo` 函数执行完毕，原本应该销毁整个函数和函数的自由变量。
+- 但是函数 `foo` 执行后，返回了 `bar` 函数。那么在执行 `fn()`这一行代码的时候，则会执行执行 `bar` 函数的引用
+- 最终执行 `bar` 的 `name` 则会去找 `foo` 函数中定义的 `name` 变量
