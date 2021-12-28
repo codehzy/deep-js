@@ -21,12 +21,12 @@ module.exports = {
       }
     ],
     sidebar: [
-      {
-        title: '欢迎学习',
-        path: '/',
-        collapsable: false, //折叠
-        children: [{ title: '学前必读', path: '/' }]
-      },
+      // {
+      //   title: '欢迎学习',
+      //   path: '/handbook/pre-read',
+      //   collapsable: false, //折叠
+      //   children: [{ title: '学前必读', path: '/handbook/pre-read' }]
+      // },
       {
         title: 'JavaScript运行环境',
         path: '/handbook/01_browser-deep',
