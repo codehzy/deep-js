@@ -402,7 +402,7 @@ fn()
 - 但是函数 `foo` 执行后，返回了 `bar` 函数。那么在执行 `fn()`这一行代码的时候，则会执行执行 `bar` 函数的引用
 - 最终执行 `bar` 的 `name` 则会去找 `foo` 函数中定义的 `name` 变量
 
-2. **闭包的场景**
+2. **闭包内存泄漏**
 
 ![闭包的内存泄漏](../.vuepress/public/memory-leak.png)
 
@@ -428,3 +428,63 @@ fn = null
 - 这样我们定义的 `fn` 就在全局保存了一个 `bar` 函数的内存地址，当 `foo` 函数执行完成以后，理论上是需要销毁 `foo` 的所有变量，但是此时的 `bar` 函数的内存地址被全局的 `fn` 占着，因此此时 `bar` 函数的内存地址不会被销毁
 - 如果我们只使用一次 `fn` 这个函数，以后再也不使用，那么这个引用则一直会存在于全局。从而导致内存泄漏
 - 解决方法：我们手动将 `fn=null`,这样 `Chrome` 的标记清除算法则从根走不到这个地址，`JS` 引擎就会将其清除。
+
+3. **闭包内存泄漏场景**
+
+```js
+function createFnArray() {
+  // 占据的空间是4M x 100 + 其他的内存 = 400M+
+  var arr = new Array(1024 * 1024).fill(1)
+  return function () {
+    console.log(arr.length)
+  }
+}
+
+// 递增的创建函数执行放到arrayFns数组中
+var arrayFns = []
+for (var i = 0; i < 100; i++) {
+  setTimeout(() => {
+    arrayFns.push(createFnArray())
+  }, i * 100)
+}
+
+// arrayFns = null，递减的去抛出数组
+setTimeout(() => {
+  for (var i = 0; i < 50; i++) {
+    setTimeout(() => {
+      arrayFns.pop()
+    }, 100 * i)
+  }
+}, 10000)
+```
+
+![内存泄漏Chrome图](../.vuepress/public/closure-memory-clear.png)
+
+- 根据上述代码和图中我们可以看到。函数 `createFnArray` 会返回一个 `4M`的数组。
+- 在 `GO` 中，我们定义一个 `arrayFns` 数组存放每次函数执行的数组（**这样则会产生闭包**）。每隔对应的毫秒对应项目数毫秒加入 `arrayFns` 数组中。
+- 在 `10000ms` 之后，对应项数毫秒数将 arrayFns 中的数组 `pop` 出 `1` 次（总共 `50` 次）
+- 我们可以根据上图中的**内存增长**看到，先开始递增的增加内存到 `400M`，紧接着我们进行清除，则可以看到清除掉 `50` 次的 `GC` 帮我们回收了一般的内存。
+
+4. **闭包中自由变量的清除**
+
+```js
+function foo() {
+  var name = 'hzy'
+  var age = 18
+
+  function bar() {
+    debugger
+    console.log(name)
+    // console.log(age)
+  }
+
+  return bar
+}
+
+var fn = foo()
+fn()
+```
+
+![闭包中自由变量的清除](../.vuepress/public/closure-freedom-env-clear.png)
+
+- 根据上述代码和图中我们可以看到。`Chrome` 的 `V8` 引擎会自动帮我们清除没用使用的闭包中的 `name`(变量)
