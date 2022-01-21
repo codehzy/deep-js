@@ -392,3 +392,169 @@ person1.obj.foo2().call(person2) // obj
 ```
 
 [原文链接(coderwhy)](https://mp.weixin.qq.com/s/hYm0JgBI25grNG_2sCRlTA)
+
+## call、apply、bind 手动实现
+
+### 1. call
+
+```js
+// apply/call/bind的用法
+// js模拟它们的实现? 难度
+
+// 给所有的函数添加一个hycall的方法
+Function.prototype.hycall = function (thisArg, ...args) {
+  // 在这里可以去执行调用的那个函数(foo)
+  // 问题: 得可以获取到是哪一个函数执行了hycall
+  // 1.获取需要被执行的函数
+  var fn = this
+
+  // 2.对thisArg转成对象类型(防止它传入的是非对象类型)
+  thisArg = thisArg !== null && thisArg !== undefined ? Object(thisArg) : window
+
+  // 3.调用需要被执行的函数
+  thisArg.fn = fn
+  var result = thisArg.fn(...args)
+  delete thisArg.fn
+
+  // 4.将最终的结果返回出去
+  return result
+}
+
+function foo() {
+  console.log('foo函数被执行', this)
+}
+
+function sum(num1, num2) {
+  console.log('sum函数被执行', this, num1, num2)
+  return num1 + num2
+}
+
+// 系统的函数的call方法
+foo.call(undefined)
+var result = sum.call({}, 20, 30)
+// console.log("系统调用的结果:", result)
+
+// 自己实现的函数的hycall方法
+// 默认进行隐式绑定
+// foo.hycall({name: "why"})
+foo.hycall(undefined)
+var result = sum.hycall('abc', 20, 30)
+console.log('hycall的调用:', result)
+
+// var num = {name: "why"}
+// console.log(Object(num))
+```
+
+### 2. apply
+
+```js
+// 自己实现hyapply
+Function.prototype.hyapply = function (thisArg, argArray) {
+  // 1.获取到要执行的函数
+  var fn = this
+
+  // 2.处理绑定的thisArg
+  thisArg = thisArg !== null && thisArg !== undefined ? Object(thisArg) : window
+
+  // 3.执行函数
+  thisArg.fn = fn
+  var result
+  // if (!argArray) { // argArray是没有值(没有传参数)
+  //   result = thisArg.fn()
+  // } else { // 有传参数
+  //   result = thisArg.fn(...argArray)
+  // }
+
+  // argArray = argArray ? argArray: []
+  argArray = argArray || []
+  result = thisArg.fn(...argArray)
+
+  delete thisArg.fn
+
+  // 4.返回结果
+  return result
+}
+
+function sum(num1, num2) {
+  console.log('sum被调用', this, num1, num2)
+  return num1 + num2
+}
+
+function foo(num) {
+  return num
+}
+
+function bar() {
+  console.log('bar函数被执行', this)
+}
+
+// 系统调用
+// var result = sum.apply("abc", 20)
+// console.log(result)
+
+// 自己实现的调用
+// var result = sum.hyapply("abc", [20, 30])
+// console.log(result)
+
+// var result2 = foo.hyapply("abc", [20])
+// console.log(result2)
+
+// edge case
+bar.hyapply(0)
+```
+
+### 3. bind
+
+```js
+Function.prototype.hybind = function (thisArg, ...argArray) {
+  // 1.获取到真实需要调用的函数
+  var fn = this
+
+  // 2.绑定this
+  thisArg = thisArg !== null && thisArg !== undefined ? Object(thisArg) : window
+
+  function proxyFn(...args) {
+    // 3.将函数放到thisArg中进行调用
+    thisArg.fn = fn
+    // 特殊: 对两个传入的参数进行合并
+    var finalArgs = [...argArray, ...args]
+    var result = thisArg.fn(...finalArgs)
+    delete thisArg.fn
+
+    // 4.返回结果
+    return result
+  }
+
+  return proxyFn
+}
+
+function foo() {
+  console.log('foo被执行', this)
+  return 20
+}
+
+function sum(num1, num2, num3, num4) {
+  console.log(num1, num2, num3, num4)
+}
+
+// 系统的bind使用
+var bar = foo.bind('abc')
+bar()
+
+// var newSum = sum.bind("aaa", 10, 20, 30, 40)
+// newSum()
+
+// var newSum = sum.bind("aaa")
+// newSum(10, 20, 30, 40)
+
+// var newSum = sum.bind("aaa", 10)
+// newSum(20, 30, 40)
+
+// 使用自己定义的bind
+// var bar = foo.hybind("abc")
+// var result = bar()
+// console.log(result)
+
+var newSum = sum.hybind('abc', 10, 20)
+var result = newSum(30, 40)
+```
