@@ -46,3 +46,77 @@ var add3 = (x) => (y) => (z) => {
 
 console.log(add3(10)(20)(30))
 ```
+
+## 3、柯里化的应用
+
+### 3.1 函数的单一职责
+
+```js
+// 函数的单一职责
+
+// 柯里化前
+function add(x,y,z){
+  x = x + 2
+  y = y + 2
+  z = z + 2
+  return x + y + z
+}
+
+console.log(add(10,20,30))
+
+// 柯里化后
+function sum(x,y,z){
+  x  = x + 2
+
+  return function (y){
+    y = y + 2
+    return function (z){
+      z = z + 2
+      return x + y + z
+    }
+  }
+}
+
+console.log(sum(10)(20)(30))
+```
+
+- 根据上述代码，我们可以看到函数在柯里化之前是将多个函数封装到了一个函数里面，如果某个函数的处理的逻辑过于复杂，那么**后期的代码就很难维护。**
+- **柯里化以后**，我们可以很清楚的看到某个函数的单一职责，每个函数只会执行自己的功能，并且不会影响到其他的函数。
+
+### 3.2 柯里化函数的逻辑复用
+
+```js
+// 普通函数
+function log(date,type,message){
+  console.log(`[${date.getHours()}:${date.getMinutes()}][${type}]: [${message}]`)
+}
+
+log(new Date(),'DEBUG','查找到轮播图的bug')
+log(new Date(), "DEBUG", "查询菜单的bug")
+log(new Date(), "DEBUG", "查询数据的bug")
+
+// 柯里化的优化
+const log = date => type => message => {
+  console.log(`[${date.getHours()}:${date.getMinutes()}][${type}]: [${message}]`)
+}
+
+let nowLog = log(new Date())
+nowLog("DEBUG")("查找到轮播图的bug")
+nowLog("FETURE")("新增了添加用户的功能")
+
+let nowAndDebugLog = log(new Date())("DEBUG")
+nowAndDebugLog("查找到轮播图的bug")
+nowAndDebugLog("查找到轮播图的bug")
+nowAndDebugLog("查找到轮播图的bug")
+nowAndDebugLog("查找到轮播图的bug")
+
+let nowAndFetureLog = log(new Date())("FETURE")
+nowAndFetureLog("添加新功能~")
+```
+
+- 根据上述代码，我们可以看到柯里化以前的函数，每次执行的时候都需要传入三个参数来调用。没有很好的去实现**复用**。
+- **柯里化以后的函数**，我们可以生成一个传入第一个（或者多个值的函数），使其**生成一个新的函数**，后续的调用只需要使用这个函数，并且**传入剩余的需要传入的参数就可以了**。
+  
+::: tip
+调用柯里化函数的时候，需要使用多个括号传入参数，**因为柯里化是一层一层处理函数，下一个函数在上一个函数执行完成以后再执行。**
+:::
