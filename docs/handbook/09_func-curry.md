@@ -120,3 +120,35 @@ nowAndFetureLog("添加新功能~")
 ::: tip
 调用柯里化函数的时候，需要使用多个括号传入参数，**因为柯里化是一层一层处理函数，下一个函数在上一个函数执行完成以后再执行。**
 :::
+
+## 4、手写柯里化
+```js
+function add1(x,y,z){
+    return x + y + z
+}
+
+function hyCurrying(fn){
+    function curried(...args){
+        if(args.length >= fn.length){
+            return fn.apply(this,args)
+        }else{
+            function curried2(...args2){
+                return curried.apply(this,[...args,...args2])
+            }
+            return curried2
+        }
+    }
+
+    return curried
+}
+
+const curryAdd = hyCurrying(add1)
+
+console.log(curryAdd(10,20,30))
+console.log(curryAdd(10, 20)(30))
+console.log(curryAdd(10)(20)(30))
+```
+
+- 上述代码，可以看到我们通过传入的`args`的长度和`fn`的参数长度来进行判断。
+- 只有当args长度 `>=` fn的参数的长度，那么此时就意味着可以满足了`fn`的函数执行。
+- 如果传入的`args`长度不满足`fn`的参数的长度，那么我们就对参数进行拼接。(直至传入的`args`的长度满足`fn`执行时的参数的长度。)
