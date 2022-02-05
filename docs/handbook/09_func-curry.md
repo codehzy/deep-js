@@ -152,3 +152,41 @@ console.log(curryAdd(10)(20)(30))
 - 上述代码，可以看到我们通过传入的`args`的长度和`fn`的参数长度来进行判断。
 - 只有当args长度 `>=` fn的参数的长度，那么此时就意味着可以满足了`fn`的函数执行。
 - 如果传入的`args`长度不满足`fn`的参数的长度，那么我们就对参数进行拼接。(直至传入的`args`的长度满足`fn`执行时的参数的长度。)
+
+## 5、组合函数
+
+```js
+function hyCompose(...fns){
+    let length = fns.length
+    for(let i =0;i < length;i++){
+        if(typeof fns[i] !== 'function'){
+            throw new TypeError('请输入函数类型的参数')
+        }
+    }
+
+    function compose(...args){
+        let index = 0
+        let result = length ? fns[index].apply(this,args) : args
+        while(++index < length){
+            result = fns[index].apply(this,[result])
+        }
+        return result
+    }
+
+    return compose
+}
+
+const double = (m) => {
+    return m * 2
+}
+
+const square = (n) => {
+    return n ** 2
+}
+
+const newFn = hyCompose(double,square)
+console.log(newFn(10)) // 400
+```
+
+- 根据上述代码，**实现一个新的函数**，参数接受两个（或者两个以上的函数类型参数）。
+- **根据传入的参数，依次执行传入的函数**。从而来实现函数的组合。
