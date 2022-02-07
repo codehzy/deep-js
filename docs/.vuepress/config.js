@@ -47,7 +47,16 @@ module.exports = {
           { title: '执行上下文', path: '/handbook/06_exec-context' },
           { title: '深入函数执行', path: '/handbook/07_deep-func-exec' },
           { title: '函数的this绑定', path: '/handbook/08_func-this-bind' },
-          { title: '函数的柯里化', path: '/handbook/09_func-curry' }
+          { title: '函数的柯里化', path: '/handbook/09_func-curry' },
+          { title: 'with和eval', path: '/handbook/10_with_eval'}
+        ]
+      },
+      {
+        title: 'JavaScript面向对象(正在维护)',
+        path: '/handbook/11_js_object',
+        collapsable: false, //折叠
+        children: [
+          { title: 'JS面向对象', path: '/handbook/11_js_object' },
         ]
       }
     ],
