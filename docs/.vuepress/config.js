@@ -57,6 +57,7 @@ module.exports = {
         collapsable: false, //折叠
         children: [
           { title: 'JS面向对象', path: '/handbook/11_js_object' },
+          { title: 'JS深入-原型到原型链', path: '/handbook/12_js_object_prototype_chain' },
         ]
       }
     ],
