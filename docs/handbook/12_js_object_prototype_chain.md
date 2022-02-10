@@ -337,3 +337,97 @@ stu1.friends.push('nicy')
 console.log(stu1.friends)
 console.log(stu2.friends)
 ```
+
+## 2. 原型链判断方法（API）
+
+### 2.1. [hasOwnProperty](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/hasOwnProperty)
+
+- hasOwnProperty() 方法会返回一个布尔值，指示对象自身属性中是否具有指定的属性（也就是，是否有指定的键）。
+
+```js
+const obj = {
+  name: ' hzy',
+  age: 18
+}
+
+const info = Object.create(obj, {
+  address: {
+    value: '南京',
+    enumerable: true
+  }
+})
+
+console.log(info) // { address: '南京' }
+console.log(info.__proto__) // { name: ' hzy', age: 18 }
+
+console.log(info.hasOwnProperty('address')) // true
+console.log(info.hasOwnProperty('name')) // false
+```
+
+### 2.2 [in 操作符](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/in)
+
+- 如果指定的属性在指定的对象或其原型链中，则 in 运算符返回 true。
+
+```js
+// in 操作符
+console.log('address' in info) // true
+console.log('name' in info) // true
+
+for (let key in info) {
+  console.log(info[key]) // 南京 hzy 18
+}
+```
+
+### 2.3 [instanceof](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/instanceof)
+
+- instanceof 运算符用于检测**构造函数**的 prototype 属性是否出现在某个实例对象的原型链上。
+
+```js
+function createNewObj(o) {
+  function Fn() {}
+  Fn.prototype = o
+  return new Fn()
+}
+
+function inheritProperty(SubType, SuperType) {
+  // SubType.prototype = Object.create(SuperType.prototype)
+  SubType.prototype = createNewObj(SuperType.prototype)
+  Object.defineProperties(SubType.prototype, {
+    constructor: {
+      enumerable: false,
+      configurable: true,
+      writable: true,
+      value: SubType
+    }
+  })
+}
+
+function Person() {}
+
+function Student() {}
+
+inheritProperty(Student, Person)
+
+const stu = new Student()
+
+console.log(stu instanceof Student) // true
+console.log(stu instanceof Person) // true
+console.log(stu instanceof Object) // true
+```
+
+### 2.4 [isPrototypeOf](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/isPrototypeOf)
+
+- isPrototypeOf() 方法用于测试**一个对象是否存在于另一个对象**的原型链上。
+
+```js
+console.log(Person.prototype.isPrototypeOf(stu)) // true
+
+const obj1 = {
+  name: 'why',
+  age: 18
+}
+
+const info1 = Object.create(obj1)
+
+console.log(obj1.isPrototypeOf(info1)) // true
+```
