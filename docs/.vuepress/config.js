@@ -59,6 +59,7 @@ module.exports = {
           { title: 'JS面向对象', path: '/handbook/11_js_object' },
           { title: 'JS深入-原型到原型链', path: '/handbook/12_js_object_prototype_chain' },
           { title: 'ES6类', path: '/handbook/13_class_grammar' },
+          { title: 'ES6知识点', path: '/handbook/14_es6_base' },
         ]
       }
     ],
