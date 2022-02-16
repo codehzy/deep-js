@@ -13,21 +13,20 @@ date: '2021-02-14'
 ```js
 const names = ["abc", "cba", "nba", "mba", NaN]
 
-if (names.indexOf("cba") !== -1) {
-  console.log("包含abc元素")
+if(names.indexOf('cba') != -1) {
+  console.log(`包含cba`); // 包含cba
 }
 
-// ES7 ES2016
-if (names.includes("cba", 2)) {
-  console.log("包含abc元素")
+if(names.includes('cba')){
+  console.log(`包含cba`); // 包含cba
 }
 
-if (names.indexOf(NaN) !== -1) {
-  console.log("包含NaN")
+if(names.indexOf(NaN) != -1) {
+  console.log(`包含NaN`);
 }
 
-if (names.includes(NaN)) {
-  console.log("包含NaN")
+if(names.includes(NaN)){
+  console.log('包含NaN'); // 包含NaN
 }
 ```
 
@@ -40,5 +39,5 @@ if (names.includes(NaN)) {
 const result1 = Math.pow(3, 3)
 // ES7: **
 const result2 = 3 ** 3
-console.log(result1, result2)
+console.log(result1, result2) // 27 27
 ```

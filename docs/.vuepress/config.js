@@ -60,6 +60,11 @@ module.exports = {
           { title: 'JS深入-原型到原型链', path: '/handbook/12_js_object_prototype_chain' },
           { title: 'ES6类', path: '/handbook/13_class_grammar' },
           { title: 'ES6知识点', path: '/handbook/14_es6_base' },
+          { title: 'ES7知识点', path: '/handbook/15_es7_base' },
+          { title: 'ES8知识点', path: '/handbook/16_es8_base' },
+          { title: 'ES10知识点', path: '/handbook/17_es10_base' },
+          { title: 'ES11知识点', path: '/handbook/18_es11_base' },
+          { title: 'ES12知识点', path: '/handbook/19_es12_base' },
         ]
       }
     ],
