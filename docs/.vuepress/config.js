@@ -52,7 +52,7 @@ module.exports = {
         ]
       },
       {
-        title: 'JavaScript面向对象(正在维护)',
+        title: 'JavaScript面向对象',
         path: '/handbook/11_js_object',
         collapsable: false, //折叠
         children: [
@@ -66,7 +66,16 @@ module.exports = {
           { title: 'ES11知识点', path: '/handbook/18_es11_base' },
           { title: 'ES12知识点', path: '/handbook/19_es12_base' },
         ]
-      }
+      },
+      {
+        title: 'JavaScript几座新大山',
+        path: '/handbook/20_proxy_base',
+        collapsable: false, //折叠
+        children: [
+          { title: 'Proxy', path: '/handbook/20_proxy_base' },
+          { title: 'Promise', path: '/handbook/21_promise_handle' },
+        ]
+      },
     ],
     subSidebar: 'auto', //在所有页面中启用自动生成子侧边栏，原 sidebar 仍然兼容,
     codeTheme: 'tomorrow'
